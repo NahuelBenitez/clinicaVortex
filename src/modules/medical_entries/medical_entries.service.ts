@@ -42,20 +42,21 @@ export class MedicalEntriesService {
   }
 
   async findAllMedicalEntries(
+    //primero agrego parametros con su tipo
     withPractices?: boolean, 
     withMedicalConsultations?: boolean,
     fromDate?: Date,
     toDate?: Date,
     doctorLicenseNumber?: number,
     medicalInsurance?: string,
-    patientDNIs?: number[],
+  
     doctorSpeciality?: string,
     diseaseName?: string
   ): Promise<MedicalEntry[]> {
     try {
       let queryBuilder = this.medicalEntryRepository
-            .createQueryBuilder('medicalEntry')
-            .leftJoinAndSelect('medicalEntry.medicalHistory', 'MedicalHistory')
+            .createQueryBuilder('medicalEntry')//creo consulta desde medicalEntry
+            .leftJoinAndSelect('medicalEntry.medicalHistory', 'MedicalHistory')//relaciones
             .leftJoinAndSelect('MedicalHistory.patient', 'Patient')
             .leftJoinAndSelect('medicalEntry.Doctor', 'Doctor')
             .leftJoinAndSelect('medicalEntry.Practices', 'Practices')
@@ -68,10 +69,10 @@ export class MedicalEntriesService {
                 'Practices',
                 'MedicalConsultations',
                 'Disease'
-            ])
-            .addSelect(['MedicalHistory.id', 'Patient'])
+            ])//consulta de consulta basicamente
+            .addSelect(['MedicalHistory.id', 'Patient'])//para tener al paciente agregando relacion
             .where('Patient.isDeleted = false');
-
+//PARA FECHAS DESDE HASTA
           if (fromDate || toDate) {
             if (fromDate && toDate) {
                 queryBuilder = queryBuilder.where('medicalEntry.date BETWEEN :fromDate AND :toDate', { fromDate, toDate });
@@ -81,33 +82,30 @@ export class MedicalEntriesService {
                 queryBuilder = queryBuilder.where('medicalEntry.date <= :toDate', { toDate });
             }
           }
-
+//CONSULTAS
           if (withMedicalConsultations) {
               queryBuilder = queryBuilder.where('MedicalConsultations.id IS NOT NULL');
           }
-          
+          //PRACTICAS
           if (withPractices) {
               queryBuilder = queryBuilder.where('Practices.id IS NOT NULL');
           }
-
+//MATRICULA
           if (doctorLicenseNumber !== undefined && doctorLicenseNumber !== null) {
             queryBuilder = queryBuilder.andWhere('Doctor.licenseNumber = :doctorLicenseNumber', { doctorLicenseNumber });
           } else if (doctorLicenseNumber === null) {
             queryBuilder = queryBuilder.andWhere('Doctor.id IS NULL');
           }
-
+//OBRA SOCIAL
           if (medicalInsurance) {
             queryBuilder = queryBuilder.andWhere('Patient.medicalInsurance = :medicalInsurance', { medicalInsurance });
           }
 
-          if (patientDNIs) {
-            queryBuilder = queryBuilder.where('Patient.dni IN (:...patientDNIs)', { patientDNIs })
-          }
-
+//ESPCIALIDAD DOCTOR
           if (doctorSpeciality) {
             queryBuilder = queryBuilder.andWhere('Doctor.speciality LIKE :speciality', { speciality: `%${doctorSpeciality}%` });
           }
-
+//ENFERMEDAD
           if (diseaseName) {
             console.log(diseaseName)
             queryBuilder = queryBuilder.andWhere('Disease.name LIKE :name', { name: `%${diseaseName}%` });

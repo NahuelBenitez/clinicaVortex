@@ -32,7 +32,6 @@ export class MedicalEntriesController {
         toDate, 
         doctorLicenseNumber, 
         medicalInsurance,
-        patientDNIs,
         doctorSpeciality,
         diseaseName
       );
