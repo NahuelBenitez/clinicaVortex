@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { MedicalEntriesService } from './medical_entries.service';
 import { CreateMedicalEntryDto } from './dto/create-medical_entry.dto';
 import { UpdateMedicalEntryDto } from './dto/update-medical_entry.dto';
@@ -9,33 +18,34 @@ export class MedicalEntriesController {
   constructor(private readonly medicalEntriesService: MedicalEntriesService) {}
 
   @Post('')
-  async createMedicalEntry(@Body() body: CreateMedicalEntryDto): Promise<MedicalEntry> {
-    return await this.medicalEntriesService.createMedicalEntry(body);
+  async create(
+    @Body() body: CreateMedicalEntryDto,
+  ): Promise<MedicalEntry> {
+    return await this.medicalEntriesService.create(body);
   }
 
   @Get()
-    async findAllMedicalEntriesWithPractices(
-      @Query('withPractices') withPractices: boolean,
-      @Query('withMedicalConsultations') withMedicalConsultations: boolean,
-      @Query('fromDate') fromDate: Date,
-      @Query('toDate') toDate: Date,
-      @Query('doctorLicenseNumber') doctorLicenseNumber: number,
-      @Query('medicalInsurance') medicalInsurance: string,
-      @Query('patientDNIs') patientDNIs: number[],
-      @Query('doctorSpeciality') doctorSpeciality: string,
-      @Query('diseaseName') diseaseName?: string
-    ): Promise<MedicalEntry[]> {
-      return this.medicalEntriesService.findAllMedicalEntries(
-        withPractices, 
-        withMedicalConsultations, 
-        fromDate, 
-        toDate, 
-        doctorLicenseNumber, 
-        medicalInsurance,
-        doctorSpeciality,
-        diseaseName
-      );
-    }
+  async findAll(
+    @Query('withPractices') withPractices: boolean, //Query por cada consulta que haga y parametro
+    @Query('withMedicalConsultations') withMedicalConsultations: boolean,
+    @Query('fromDate') fromDate: Date,
+    @Query('toDate') toDate: Date,
+    @Query('doctorLicenseNumber') doctorLicenseNumber: number,
+    @Query('medicalInsurance') medicalInsurance: string,
+    @Query('doctorSpeciality') doctorSpeciality: string,
+    @Query('diseaseName') diseaseName?: string,
+  ): Promise<MedicalEntry[]> {
+    return this.medicalEntriesService.findAll(
+      withPractices,
+      withMedicalConsultations,
+      fromDate,
+      toDate,
+      doctorLicenseNumber,
+      medicalInsurance,
+      doctorSpeciality,
+      diseaseName,
+    );
+  }
 
   @Get(':id')
   findOneMedicalEntry(@Param('id') id: string) {
@@ -43,12 +53,12 @@ export class MedicalEntriesController {
   }
 
   @Patch(':id')
-  updateMedicalEntry(@Param('id') id: string, @Body() body: UpdateMedicalEntryDto) {
-    return this.medicalEntriesService.updateMedicalEntry(+id, body);
+  update(@Param('id') id: string, @Body() body: UpdateMedicalEntryDto) {
+    return this.medicalEntriesService.update(+id, body);
   }
 
   @Delete(':id')
-  removeMedicalEntry(@Param('id') id: string) {
-    return this.medicalEntriesService.removeMedicalEntry(+id);
+  remove(@Param('id') id: string) {
+    return this.medicalEntriesService.remove(+id);
   }
 }

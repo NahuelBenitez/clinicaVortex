@@ -9,7 +9,6 @@ import { MedicalEntry } from '../medical_entries/entities/medical_entry.entity';
 
 @Injectable()
 export class PatientsService {
-
   constructor(
     @InjectRepository(Patient)
     private readonly patientRepository: Repository<Patient>,
@@ -35,7 +34,10 @@ export class PatientsService {
 
       return savedPatient;
     } catch (error) {
-      throw new HttpException('Failed to create patient', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to create patient',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -45,34 +47,36 @@ export class PatientsService {
         .createQueryBuilder('patient')
         .leftJoinAndSelect('patient.medicalHistory', 'medicalHistory')
         .leftJoin('medicalHistory.medicalEntries', 'medicalEntry')
-        .select([
-          'patient',
-          'medicalHistory',
-          'medicalEntry.id'
-        ])
+        .select(['patient', 'medicalHistory', 'medicalEntry.id'])
         .getMany();
 
       return patients;
     } catch (error) {
-      throw new HttpException('Failed to find patients', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to find patients',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-  
 
   public async findOnePatient(id: number): Promise<Patient> {
     try {
-      const patient: Patient = await this.patientRepository.findOne(
-        {
-          where: { id },
-          relations: ['medicalHistory', 'medicalHistory.medicalEntries'],
-        }
-      );
+      const patient: Patient = await this.patientRepository.findOne({
+        where: { id },
+        relations: ['medicalHistory', 'medicalHistory.medicalEntries'],
+      });
       if (!patient) {
-        throw new HttpException('Failed to find result', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Failed to find result',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       return patient;
     } catch (error) {
-      throw new HttpException('Failed to find patient', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to find patient',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -86,12 +90,18 @@ export class PatientsService {
         body,
       );
       if (patient.affected === 0) {
-        throw new HttpException('Failed to find result', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Failed to find result',
+          HttpStatus.BAD_REQUEST,
+        );
       }
-      
+
       return patient;
     } catch (error) {
-      throw new HttpException('Failed to update patient', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to update patient',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -100,11 +110,17 @@ export class PatientsService {
       const patient: DeleteResult = await this.patientRepository.softDelete(id);
       await this.patientRepository.update(id, { isDeleted: true });
       if (patient.affected === 0) {
-        throw new HttpException('Failed to find result', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Failed to find result',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       return patient;
     } catch (error) {
-      throw new HttpException('Failed to delete patient', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to delete patient',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

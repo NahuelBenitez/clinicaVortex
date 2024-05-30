@@ -15,7 +15,7 @@ import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('practices')
 export class PracticesController {
-  constructor(private readonly practicesService: PracticesService) { }
+  constructor(private readonly practicesService: PracticesService) {}
   @UseGuards(AuthGuard)
   @Post()
   create(@Body() createPracticeDto: CreatePracticeDto) {

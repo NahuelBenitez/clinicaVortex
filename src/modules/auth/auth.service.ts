@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   async signIn(
@@ -25,7 +25,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { email: user.email , role:user.role };
+    const payload = { email: user.email, role: user.role };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

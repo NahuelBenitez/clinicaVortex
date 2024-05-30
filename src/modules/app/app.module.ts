@@ -28,17 +28,15 @@ import { DocumentModule } from '../document/document.module';
     PracticesModule,
     AuthModule,
     UsersModule,
-    DocumentModule
+    DocumentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
-
   private readonly logger = new Logger('AppModule');
 
   constructor() {
     this.logger.log('AppModule initialized');
   }
-
 }

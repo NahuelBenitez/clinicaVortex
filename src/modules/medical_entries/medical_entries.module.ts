@@ -10,7 +10,15 @@ import { Practice } from '../practices/entities/practice.entity';
 // import { Patient } from '../patients/entities/patient.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MedicalEntry, MedicalHistory, Doctor, MedicalConsultation, Practice])],
+  imports: [
+    TypeOrmModule.forFeature([
+      MedicalEntry,
+      MedicalHistory,
+      Doctor,
+      MedicalConsultation,
+      Practice,
+    ]),
+  ],
   controllers: [MedicalEntriesController],
   providers: [MedicalEntriesService],
 })

@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { DiseasesService } from './diseases.service';
 import { CreateDiseaseDto } from './dto/create-disease.dto';
 import { UpdateDiseaseDto } from './dto/update-disease.dto';
@@ -18,10 +28,10 @@ export class DiseasesController {
 
   @Get()
   findAll(@Query('text') text?: string) {
-    if(text) {
-    return this.diseasesService.findAllDiseases(text);
+    if (text) {
+      return this.diseasesService.findAllDiseases(text);
     }
-    
+
     return this.diseasesService.findAllDiseases();
   }
   @UseGuards(AuthGuard)

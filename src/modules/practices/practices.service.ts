@@ -17,8 +17,10 @@ export class PracticesService {
   ) {}
 
   public async createPractice(body: CreatePracticeDto): Promise<Practice> {
-    const {medicalEntryId} = body;
-    const medicalEntry = await this.medicalEntryRepository.findOne({ where: { id: medicalEntryId}});
+    const { medicalEntryId } = body;
+    const medicalEntry = await this.medicalEntryRepository.findOne({
+      where: { id: medicalEntryId },
+    });
 
     if (!medicalEntry) {
       throw new HttpException('Medical entry not found', HttpStatus.NOT_FOUND);
@@ -29,15 +31,18 @@ export class PracticesService {
       .innerJoin('medicalEntry.MedicalConsultations', 'consultation')
       .where('medicalEntry.id = :id', { id: medicalEntryId })
       .getCount();
-    
+
     if (existingConsultations > 0) {
-      throw new HttpException('A MedicalConsultation already exists for this medical entry', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'A MedicalConsultation already exists for this medical entry',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const newPractice = this.practiceRepository.create({
       ...body,
-      MedicalEntry: medicalEntry
-    })
+      MedicalEntry: medicalEntry,
+    });
 
     try {
       const savedPractice = await this.practiceRepository.save(newPractice);
@@ -48,7 +53,10 @@ export class PracticesService {
 
       return savedPractice;
     } catch (error) {
-      throw new HttpException('Failed to create practice', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to create practice',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -56,25 +64,37 @@ export class PracticesService {
     try {
       const practice: Practice[] = await this.practiceRepository.find();
       if (practice.length === 0) {
-        throw new HttpException('Failed to find result', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Failed to find result',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       return practice;
     } catch (error) {
-      throw new HttpException('Failed to find practices', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to find practices',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   public async findOnePractice(id: number): Promise<Practice> {
     try {
       const practice: Practice = await this.practiceRepository.findOne({
-        where: [{id}]
-      })
+        where: [{ id }],
+      });
       if (!practice) {
-        throw new HttpException('Failed to find result', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Failed to find result',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       return practice;
     } catch (error) {
-      throw new HttpException('Failed to find practice', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to find practice',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -88,11 +108,17 @@ export class PracticesService {
         body,
       );
       if (practice.affected === 0) {
-        throw new HttpException('Failed to find result', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Failed to find result',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       return practice;
     } catch (error) {
-      throw new HttpException('Failed to update practice', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to update practice',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -100,11 +126,17 @@ export class PracticesService {
     try {
       const practice: DeleteResult = await this.practiceRepository.delete(id);
       if (practice.affected === 0) {
-        throw new HttpException('Failed to find result', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Failed to find result',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       return practice;
     } catch (error) {
-      throw new HttpException('Failed to delete practice', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to delete practice',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

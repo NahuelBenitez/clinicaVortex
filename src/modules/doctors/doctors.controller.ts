@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { DoctorsService } from './doctors.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
@@ -16,7 +25,7 @@ export class DoctorsController {
   create(@Body() createDoctorDto: CreateDoctorDto) {
     return this.doctorsService.createDoctor(createDoctorDto);
   }
- 
+
   @Get()
   findAll() {
     return this.doctorsService.findAllDoctors();

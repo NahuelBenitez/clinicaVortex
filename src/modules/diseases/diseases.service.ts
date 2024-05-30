@@ -13,8 +13,6 @@ export class DiseasesService {
   ) {}
 
   public async createDisease(body: CreateDiseaseDto): Promise<Disease> {
-    
-
     const newDisease = this.diseaseRepository.create(body);
 
     try {
@@ -26,7 +24,10 @@ export class DiseasesService {
 
       return savedDisease;
     } catch (error) {
-      throw new HttpException('Failed to create disease', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to create disease',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -38,29 +39,39 @@ export class DiseasesService {
         queryOptions = { where: { name: Like(`%${text}%`) } };
       }
 
-      const diseases: Disease[] = await this.diseaseRepository.find(queryOptions);
+      const diseases: Disease[] =
+        await this.diseaseRepository.find(queryOptions);
 
       if (!text && diseases.length === 0) {
         throw new HttpException('No diseases found', HttpStatus.NOT_FOUND);
       }
-      
+
       return diseases;
     } catch (error) {
-      throw new HttpException('Failed to find diseases', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to find diseases',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   public async findOneDisease(id: number): Promise<Disease> {
     try {
       const disease: Disease = await this.diseaseRepository.findOne({
-        where: [{id}]
-      })
+        where: [{ id }],
+      });
       if (!disease) {
-        throw new HttpException('Failed to find result', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Failed to find result',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       return disease;
     } catch (error) {
-      throw new HttpException('Failed to find disease', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to find disease',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -74,11 +85,17 @@ export class DiseasesService {
         body,
       );
       if (disease.affected === 0) {
-        throw new HttpException('Failed to find result', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Failed to find result',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       return disease;
     } catch (error) {
-      throw new HttpException('Failed to update disease', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to update disease',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -86,11 +103,17 @@ export class DiseasesService {
     try {
       const disease: DeleteResult = await this.diseaseRepository.delete(id);
       if (disease.affected === 0) {
-        throw new HttpException('Failed to find result', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Failed to find result',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       return disease;
     } catch (error) {
-      throw new HttpException('Failed to delete disease', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Failed to delete disease',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
