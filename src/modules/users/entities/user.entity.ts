@@ -12,4 +12,8 @@ export class User extends BaseEntity {
 
     @Column()
     role:string;
+
+
+    @Column({ nullable: true }) // Permitir que el campo sea nulo para usuarios sin avatar
+    avatar: string;
 }
