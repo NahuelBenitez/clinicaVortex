@@ -15,6 +15,9 @@ import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { DocumentModule } from '../document/document.module';
 import { RequestsLoggerMiddleware } from 'src/middleware/request-logger.middleware';
+import { ScheduleModule } from '@nestjs/schedule';
+import { WeatherModule } from 'src/weather/weather.module';
+import { WeatherService } from 'src/weather/weather.service';
 
 @Module({
   imports: [
@@ -30,9 +33,11 @@ import { RequestsLoggerMiddleware } from 'src/middleware/request-logger.middlewa
     AuthModule,
     UsersModule,
     DocumentModule,
+    WeatherModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, WeatherService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer): void {
